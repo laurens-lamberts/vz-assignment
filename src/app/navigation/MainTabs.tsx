@@ -9,6 +9,7 @@ import { Colors } from '@/app/constants/theme';
 import HomeScreen from '@/domains/home/screens/HomeScreen';
 import type { TabParamList } from '@/app/navigation/types';
 import FavoritesScreen from '@/domains/favorites/screens/FavoritesScreen';
+import { SearchStack } from '@/app/navigation/SearchStack';
 
 const Tab = createNativeBottomTabNavigator<TabParamList>();
 
@@ -40,8 +41,9 @@ export default function MainTabs() {
 
   const homeIcon = useTabIcon('house.fill', 'home', colors.text);
   const favoritesIcon = useTabIcon('star.fill', 'star', colors.text);
+  const searchIcon = useTabIcon('magnifyingglass', 'search', colors.text);
 
-  if (!homeIcon || !favoritesIcon) {
+  if (!homeIcon || !favoritesIcon || !searchIcon) {
     return null;
   }
 
@@ -53,6 +55,14 @@ export default function MainTabs() {
         options={{
           title: 'Home',
           tabBarIcon: () => homeIcon,
+        }}
+      />
+      <Tab.Screen
+        name="Search"
+        component={SearchStack}
+        options={{
+          title: 'Search',
+          tabBarIcon: () => searchIcon,
         }}
       />
       <Tab.Screen

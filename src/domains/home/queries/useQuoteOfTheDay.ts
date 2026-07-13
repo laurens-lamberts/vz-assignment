@@ -17,7 +17,7 @@ type QuoteOfTheDayResponse = {
 
 export function useQuoteOfTheDay() {
   return useQuery({
-    queryKey: [STORAGE_KEYS.QUOTES],
+    queryKey: [STORAGE_KEYS.QUOTE_OF_THE_DAY],
     queryFn: async () => {
       const response = await api.get<QuoteOfTheDayResponse>('/qotd');
       return response.data;
