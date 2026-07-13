@@ -6,14 +6,18 @@ import { ScreenContainer } from '@/app/components/primitives/ScreenContainer';
 import { Text } from '@/app/components/primitives/Text';
 import { Spacing } from '@/app/constants/theme';
 import { useTheme } from '@/app/hooks/useTheme';
+import { useFavorites } from '@/domains/favorites/context/FavoritesProvider';
 import { useQuoteOfTheDay } from '@/domains/home/queries/useQuoteOfTheDay';
 
 export default function HomeScreen() {
   const theme = useTheme();
   const tabBarHeight = useBottomTabBarHeight();
   const { data, isPending, isError, refetch } = useQuoteOfTheDay();
-
+  const { isFavorite, toggleFavorite } = useFavorites();
   const bottomInset = tabBarHeight + Spacing.md;
+
+  const hasData = !isPending && !isError && data;
+  const hasError = !isPending && isError;
 
   return (
     <>
@@ -25,19 +29,18 @@ export default function HomeScreen() {
             flex: 1,
             paddingBottom: bottomInset,
             paddingHorizontal: Spacing.md,
+            gap: Spacing.md,
           }}>
           {isPending && <ActivityIndicator color={theme.text} />}
-
-          {!isPending && isError && (
+          {hasError && (
             <>
               <Text color="textSecondary" center>
                 Couldn&apos;t load today&apos;s quote.
               </Text>
-              <Button text="Try again" onPress={() => refetch()} />
+              <Button text="Try again" icon="refresh" onPress={() => refetch()} />
             </>
           )}
-
-          {!isPending && !isError && data && (
+          {hasData && (
             <View style={{ gap: Spacing.md }}>
               <Text size="xxl" bold center>
                 “{data.quote.body}”
@@ -56,7 +59,15 @@ export default function HomeScreen() {
             bottom: bottomInset,
             alignSelf: 'center',
           }}>
-          <Button text="Get another one" onPress={() => refetch()} />
+          <View style={{ flexDirection: 'row', gap: Spacing.md }}>
+            <Button text="Another quote" icon="shuffle" onPress={() => refetch()} />
+            <Button
+              text={isFavorite(data.quote.id) ? 'Unfavorite' : 'Favorite'}
+              icon={isFavorite(data.quote.id) ? 'star' : 'star-outline'}
+              onPress={() => toggleFavorite(data.quote)}
+              minWidth={140}
+            />
+          </View>
         </View>
       )}
     </>

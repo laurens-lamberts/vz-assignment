@@ -11,6 +11,7 @@ export const Colors = {
     backgroundSelected: '#E0E1E6',
     textSecondary: '#60646C',
     tint: '#3498DB',
+    onTint: '#ffffff',
     border: '#E3E3E6',
   },
   dark: {
@@ -20,6 +21,7 @@ export const Colors = {
     backgroundSelected: '#2E3135',
     textSecondary: '#B0B4BA',
     tint: '#3498DB',
+    onTint: '#ffffff',
     border: '#3A3D42',
   },
 } as const;

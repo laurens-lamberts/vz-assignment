@@ -6,7 +6,6 @@ import { Spacing } from '@/app/constants/theme';
 import { useTheme } from '@/app/hooks/useTheme';
 
 type InternalListItemProps = {
-  isFirst?: boolean;
   isLast?: boolean;
 };
 
@@ -22,7 +21,6 @@ function ListItem({
   icon,
   onPress,
   rightText,
-  isFirst,
   isLast,
 }: ListItemProps & InternalListItemProps) {
   const theme = useTheme();
@@ -33,32 +31,26 @@ function ListItem({
       onPress={onPress}
       style={({ pressed }) => [
         {
-          alignItems: 'center',
           borderWidth: StyleSheet.hairlineWidth,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
+          borderRadius: Spacing.sm,
           paddingHorizontal: Spacing.md,
           paddingVertical: Spacing.sm,
         },
         {
           backgroundColor: theme.backgroundElement,
           borderColor: theme.border,
-          marginBottom: isLast ? 0 : -1,
-          borderTopLeftRadius: isFirst ? Spacing.sm : 0,
-          borderTopRightRadius: isFirst ? Spacing.sm : 0,
-          borderBottomLeftRadius: isLast ? Spacing.sm : 0,
-          borderBottomRightRadius: isLast ? Spacing.sm : 0,
+          marginBottom: isLast ? 0 : Spacing.sm,
           opacity: pressed ? 0.6 : 1,
         },
       ]}>
       <View style={{ alignItems: 'center', flexDirection: 'row', gap: Spacing.sm }}>
         {icon}
-        <Text size="s" bold>
+        <Text size="s" bold style={{ flexShrink: 1 }}>
           {title}
         </Text>
       </View>
       {rightText && (
-        <Text size="s" color="textSecondary">
+        <Text size="s" color="textSecondary" style={{ marginTop: Spacing.xxs }}>
           {rightText}
         </Text>
       )}
@@ -80,7 +72,6 @@ export function List({ children }: ListProps) {
       {childrenArray.map((child, index) =>
         cloneElement(child, {
           key: child.key ?? index,
-          isFirst: index === 0,
           isLast: index === childrenArray.length - 1,
         }),
       )}

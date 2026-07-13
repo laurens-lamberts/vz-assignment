@@ -9,6 +9,7 @@ import { AnimatedSplashOverlay } from '@/app/components/AnimatedIcon';
 import { QueryProvider } from '@/app/context/QueryProvider';
 import MainTabs from '@/app/navigation/MainTabs';
 import type { RootStackParamList } from '@/app/navigation/types';
+import { FavoritesProvider } from '@/domains/favorites/context/FavoritesProvider';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -21,12 +22,14 @@ export default function App() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <QueryProvider>
-          <NavigationContainer theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-            <AnimatedSplashOverlay />
-            <RootStack.Navigator screenOptions={{ headerShown: false }}>
-              <RootStack.Screen name="Main" component={MainTabs} />
-            </RootStack.Navigator>
-          </NavigationContainer>
+          <FavoritesProvider>
+            <NavigationContainer theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+              <AnimatedSplashOverlay />
+              <RootStack.Navigator screenOptions={{ headerShown: false }}>
+                <RootStack.Screen name="Main" component={MainTabs} />
+              </RootStack.Navigator>
+            </NavigationContainer>
+          </FavoritesProvider>
         </QueryProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>

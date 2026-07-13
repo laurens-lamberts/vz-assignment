@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import { Pressable } from 'react-native';
 
 import { Text } from '@/app/components/primitives/Text';
@@ -8,9 +9,11 @@ type ButtonProps = {
   text: string;
   onPress: () => void;
   disabled?: boolean;
+  minWidth?: number;
+  icon?: keyof typeof Ionicons.glyphMap;
 };
 
-export function Button({ text, onPress, disabled }: ButtonProps) {
+export function Button({ text, onPress, disabled, minWidth, icon }: ButtonProps) {
   const theme = useTheme();
 
   return (
@@ -20,14 +23,19 @@ export function Button({ text, onPress, disabled }: ButtonProps) {
       onPress={onPress}
       style={({ pressed }) => [
         {
+          flexDirection: 'row',
           alignItems: 'center',
+          justifyContent: 'center',
+          gap: Spacing.xs,
+          minWidth,
           borderRadius: Spacing.xl,
           paddingHorizontal: Spacing.lg,
           paddingVertical: Spacing.sm,
         },
         { backgroundColor: theme.tint, opacity: disabled ? 0.5 : pressed ? 0.7 : 1 },
       ]}>
-      <Text size="s" bold style={{ color: '#ffffff' }}>
+      {icon && <Ionicons name={icon} size={16} color={theme.onTint} />}
+      <Text size="s" bold style={{ color: theme.onTint }}>
         {text}
       </Text>
     </Pressable>

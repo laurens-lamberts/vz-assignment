@@ -2,15 +2,17 @@ import { useQuery } from '@tanstack/react-query';
 import { STORAGE_KEYS } from '@/app/config/storageKeys';
 import { api } from '@/app/data/api';
 
+export type Quote = {
+  id: number;
+  author: string;
+  body: string;
+  tags: string[];
+  url: string;
+};
+
 type QuoteOfTheDayResponse = {
   qotd_date: string;
-  quote: {
-    id: number;
-    author: string;
-    body: string;
-    tags: string[];
-    url: string;
-  };
+  quote: Quote;
 };
 
 export function useQuoteOfTheDay() {
