@@ -1,4 +1,3 @@
-import { Ionicons } from '@expo/vector-icons';
 import { MenuView } from '@expo/ui/community/menu';
 import { Children, cloneElement, ReactElement, ReactNode } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -6,6 +5,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { Text } from '@/app/components/primitives/Text';
 import { Spacing } from '@/app/constants/theme';
 import { useTheme } from '@/app/hooks/useTheme';
+import Animated, { LinearTransition } from 'react-native-reanimated';
 
 type InternalListItemProps = {
   isLast?: boolean;
@@ -22,7 +22,7 @@ type ListItemProps = {
   rightText?: string;
   icon?: ReactNode;
   onPress?: () => void;
-  menuAction?: ListItemMenuAction;
+  menuActions?: ListItemMenuAction[];
 };
 
 function ListItem({
@@ -30,61 +30,74 @@ function ListItem({
   icon,
   onPress,
   rightText,
-  menuAction,
+  menuActions,
   isLast,
 }: ListItemProps & InternalListItemProps) {
   const theme = useTheme();
+  const hasMenu = !!menuActions && menuActions.length > 0;
+
+  const rowStyle = [
+    {
+      alignItems: 'flex-start' as const,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderRadius: Spacing.sm,
+      flexDirection: 'row' as const,
+      gap: Spacing.sm,
+      paddingHorizontal: Spacing.md,
+      paddingVertical: Spacing.sm,
+    },
+    {
+      backgroundColor: theme.backgroundElement,
+      borderColor: theme.border,
+    },
+  ];
+
+  const content = (
+    <View style={{ flexShrink: 1 }}>
+      <View style={{ alignItems: 'center', flexDirection: 'row', gap: Spacing.sm }}>
+        {icon}
+        <Text size="s" bold style={{ flexShrink: 1 }}>
+          {title}
+        </Text>
+      </View>
+      {rightText && (
+        <Text size="s" color="textSecondary" style={{ marginTop: Spacing.xxs }}>
+          {rightText}
+        </Text>
+      )}
+    </View>
+  );
+
+  const row = hasMenu ? (
+    <View style={rowStyle}>{content}</View>
+  ) : (
+    <Pressable
+      accessibilityRole="button"
+      onPress={onPress}
+      style={({ pressed }) => [...rowStyle, { opacity: pressed && !!onPress ? 0.6 : 1 }]}>
+      {content}
+    </Pressable>
+  );
 
   return (
-    <View style={{ marginBottom: isLast ? 0 : Spacing.sm }}>
-      <Pressable
-        accessibilityRole="button"
-        onPress={onPress}
-        style={({ pressed }) => [
-          {
-            alignItems: 'flex-start',
-            borderWidth: StyleSheet.hairlineWidth,
-            borderRadius: Spacing.sm,
-            flexDirection: 'row',
-            gap: Spacing.sm,
-            paddingHorizontal: Spacing.md,
-            paddingVertical: Spacing.sm,
-          },
-          {
-            backgroundColor: theme.backgroundElement,
-            borderColor: theme.border,
-            opacity: pressed && !!onPress ? 0.6 : 1,
-          },
-        ]}>
-        <View style={{ flexShrink: 1 }}>
-          <View style={{ alignItems: 'center', flexDirection: 'row', gap: Spacing.sm }}>
-            {icon}
-            <Text size="s" bold style={{ flexShrink: 1 }}>
-              {title}
-            </Text>
-          </View>
-          {rightText && (
-            <Text size="s" color="textSecondary" style={{ marginTop: Spacing.xxs }}>
-              {rightText}
-            </Text>
-          )}
-        </View>
-        {menuAction && (
-          <MenuView
-            style={{ marginLeft: 'auto', padding: Spacing.xxs }}
-            actions={[
-              {
-                id: 'menuAction',
-                title: menuAction.label,
-                attributes: { destructive: menuAction.destructive },
-              },
-            ]}
-            onPressAction={() => menuAction.onPress()}>
-            <Ionicons name="ellipsis-vertical" size={18} color={theme.textSecondary} />
-          </MenuView>
-        )}
-      </Pressable>
-    </View>
+    <Animated.View style={{ marginBottom: isLast ? 0 : Spacing.sm }} layout={LinearTransition}>
+      {hasMenu ? (
+        <MenuView
+          actions={menuActions.map((action, index) => ({
+            id: String(index),
+            title: action.label,
+            attributes: { destructive: action.destructive },
+          }))}
+          shouldOpenOnLongPress
+          onPressAction={(event) => {
+            menuActions[Number(event.nativeEvent.event)]?.onPress();
+          }}>
+          {row}
+        </MenuView>
+      ) : (
+        row
+      )}
+    </Animated.View>
   );
 }
 

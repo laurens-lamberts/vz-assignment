@@ -11,9 +11,10 @@ import { useQuoteOfTheDay } from '@/domains/home/queries/useQuoteOfTheDay';
 
 export default function HomeScreen() {
   const theme = useTheme();
-  const tabBarHeight = useBottomTabBarHeight();
   const { data, isPending, isError, refetch } = useQuoteOfTheDay();
   const { isFavorite, toggleFavorite } = useFavorites();
+
+  const tabBarHeight = useBottomTabBarHeight();
   const bottomInset = tabBarHeight + Spacing.md;
 
   const hasData = !isPending && !isError && data;
@@ -60,7 +61,7 @@ export default function HomeScreen() {
             alignSelf: 'center',
           }}>
           <View style={{ flexDirection: 'row', gap: Spacing.md }}>
-            <Button text="Another quote" icon="shuffle" onPress={() => refetch()} />
+            <Button text="New quote" icon="shuffle" onPress={() => refetch()} />
             <Button
               text={isFavorite(data.quote.id) ? 'Unfavorite' : 'Favorite'}
               icon={isFavorite(data.quote.id) ? 'star' : 'star-outline'}

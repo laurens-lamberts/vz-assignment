@@ -10,20 +10,27 @@ export default function FavoritesScreen() {
   return (
     <ScreenContainer style={{ paddingHorizontal: Spacing.md }}>
       {favorites.length > 0 ? (
-        <List>
-          {favorites.map((quote) => (
-            <List.Item
-              key={quote.id}
-              title={quote.body}
-              rightText={`- ${quote.author}`}
-              menuAction={{
-                label: 'Unfavorite',
-                destructive: true,
-                onPress: () => removeFavorite(quote.id),
-              }}
-            />
-          ))}
-        </List>
+        <>
+          <List>
+            {favorites.map((quote) => (
+              <List.Item
+                key={quote.id}
+                title={quote.body}
+                rightText={`- ${quote.author}`}
+                menuActions={[
+                  {
+                    label: 'Unfavorite',
+                    destructive: true,
+                    onPress: () => removeFavorite(quote.id),
+                  },
+                ]}
+              />
+            ))}
+          </List>
+          <Text size="s" color="textSecondary" center style={{ marginTop: Spacing.sm }}>
+            Long-press a quote to unfavorite
+          </Text>
+        </>
       ) : (
         <Text color="textSecondary" center>
           No favorite quotes yet.
