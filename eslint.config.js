@@ -39,10 +39,6 @@ module.exports = defineConfig([
           message: 'Inline import() types are not allowed. Use a top-level import instead.',
         },
       ],
-      'react-hooks/immutability': 'off',
-      'react-hooks/set-state-in-effect': 'off',
-      'react-hooks/refs': 'off',
-      'react-hooks/purity': 'off',
       'unused-imports/no-unused-vars': [
         'warn',
         {

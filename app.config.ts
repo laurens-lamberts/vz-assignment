@@ -22,10 +22,6 @@ const config: ExpoConfig = {
     },
     predictiveBackGestureEnabled: false,
   },
-  web: {
-    output: 'single',
-    favicon: './assets/images/favicon.png',
-  },
   plugins: [
     'react-native-bottom-tabs',
     [

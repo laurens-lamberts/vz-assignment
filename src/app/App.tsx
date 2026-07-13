@@ -6,6 +6,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AnimatedSplashOverlay } from '@/app/components/AnimatedIcon';
+import { QueryProvider } from '@/app/context/QueryProvider';
 import MainTabs from '@/app/navigation/MainTabs';
 import type { RootStackParamList } from '@/app/navigation/types';
 
@@ -19,12 +20,14 @@ export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <NavigationContainer theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          <AnimatedSplashOverlay />
-          <RootStack.Navigator screenOptions={{ headerShown: false }}>
-            <RootStack.Screen name="Main" component={MainTabs} />
-          </RootStack.Navigator>
-        </NavigationContainer>
+        <QueryProvider>
+          <NavigationContainer theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+            <AnimatedSplashOverlay />
+            <RootStack.Navigator screenOptions={{ headerShown: false }}>
+              <RootStack.Screen name="Main" component={MainTabs} />
+            </RootStack.Navigator>
+          </NavigationContainer>
+        </QueryProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

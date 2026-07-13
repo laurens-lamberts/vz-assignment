@@ -1,94 +1,64 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
+import { ActivityIndicator, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { AnimatedIcon } from '@/app/components/AnimatedIcon';
-import { HintRow } from '@/app/components/HintRow';
 import { ThemedText } from '@/app/components/ThemedText';
 import { ThemedView } from '@/app/components/ThemedView';
-import { WebBadge } from '@/app/components/WebBadge';
+import { Button } from '@/app/components/primitives/Button';
+import { ScreenContainer } from '@/app/components/primitives/ScreenContainer';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/app/constants/theme';
-
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
-  return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
-}
+import { useTheme } from '@/app/hooks/useTheme';
+import { useQuoteOfTheDay } from '@/domains/home/queries/useQuoteOfTheDay';
 
 export default function HomeScreen() {
+  const theme = useTheme();
+  const { data, isPending, isError, isRefetching, refetch } = useQuoteOfTheDay();
+
   return (
-    <ThemedView style={styles.container}>
+    <ScreenContainer isRefreshing={isRefetching} onRefresh={refetch}>
       <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
+        <ThemedView style={styles.card}>
+          {isPending && <ActivityIndicator color={theme.text} />}
+
+          {!isPending && isError && (
+            <>
+              <ThemedText type="default" themeColor="textSecondary" style={styles.centerText}>
+                Couldn&apos;t load today&apos;s quote.
+              </ThemedText>
+              <Button text="Try again" onPress={() => refetch()} />
+            </>
+          )}
+
+          {!isPending && !isError && data && (
+            <>
+              <ThemedText type="subtitle" style={styles.centerText}>
+                “{data.quote.body}”
+              </ThemedText>
+              <ThemedText type="default" themeColor="textSecondary" style={styles.centerText}>
+                — {data.quote.author}
+              </ThemedText>
+            </>
+          )}
         </ThemedView>
-
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
-
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/domains/home/screens/HomeScreen.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-        </ThemedView>
-
-        {Platform.OS === 'web' && <WebBadge />}
       </SafeAreaView>
-    </ThemedView>
+    </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
+    alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  safeArea: {
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
     paddingBottom: BottomTabInset + Spacing.three,
+    paddingHorizontal: Spacing.four,
+  },
+  card: {
+    alignItems: 'center',
+    alignSelf: 'stretch',
+    gap: Spacing.three,
     maxWidth: MaxContentWidth,
   },
-  heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
-  },
-  title: {
+  centerText: {
     textAlign: 'center',
-  },
-  code: {
-    textTransform: 'uppercase',
-  },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
   },
 });
