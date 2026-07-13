@@ -21,9 +21,6 @@ export function useQuoteOfTheDay() {
     queryKey: [STORAGE_KEYS.QUOTE_OF_THE_DAY],
     queryFn: async () => {
       const response = await api.get<QuoteOfTheDayResponse>('/qotd');
-      if (response.data.quote.body.includes('<br')) {
-        console.log('Quote contains <br> tags:', response.data.quote.body);
-      }
       return {
         ...response.data,
         quote: {
