@@ -2,12 +2,12 @@ import * as Device from 'expo-device';
 import { Platform, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+import { AnimatedIcon } from '@/app/components/AnimatedIcon';
+import { HintRow } from '@/app/components/HintRow';
+import { ThemedText } from '@/app/components/ThemedText';
+import { ThemedView } from '@/app/components/ThemedView';
+import { WebBadge } from '@/app/components/WebBadge';
+import { BottomTabInset, MaxContentWidth, Spacing } from '@/app/constants/theme';
 
 function getDevMenuHint() {
   if (Platform.OS === 'web') {
@@ -46,13 +46,9 @@ export default function HomeScreen() {
         <ThemedView type="backgroundElement" style={styles.stepContainer}>
           <HintRow
             title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
+            hint={<ThemedText type="code">src/domains/home/screens/HomeScreen.tsx</ThemedText>}
           />
           <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
         </ThemedView>
 
         {Platform.OS === 'web' && <WebBadge />}

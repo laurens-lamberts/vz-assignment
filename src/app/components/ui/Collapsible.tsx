@@ -3,10 +3,10 @@ import { PropsWithChildren, useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Spacing } from '@/constants/theme';
-import { useTheme } from '@/hooks/use-theme';
+import { ThemedText } from '@/app/components/ThemedText';
+import { ThemedView } from '@/app/components/ThemedView';
+import { Spacing } from '@/app/constants/theme';
+import { useTheme } from '@/app/hooks/useTheme';
 
 export function Collapsible({ children, title }: PropsWithChildren & { title: string }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,7 +16,8 @@ export function Collapsible({ children, title }: PropsWithChildren & { title: st
     <ThemedView>
       <Pressable
         style={({ pressed }) => [styles.heading, pressed && styles.pressedHeading]}
-        onPress={() => setIsOpen((value) => !value)}>
+        onPress={() => setIsOpen((value) => !value)}
+      >
         <ThemedView type="backgroundElement" style={styles.button}>
           <SymbolView
             name={{ ios: 'chevron.right', android: 'chevron_right', web: 'chevron_right' }}
