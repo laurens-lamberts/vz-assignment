@@ -16,7 +16,7 @@ const queryClient = new QueryClient({
   queryCache: new QueryCache(),
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60 * 60, // quote of the day only changes daily
+      staleTime: 1000 * 60 * 5, // 5 minutes
     },
   },
 });
