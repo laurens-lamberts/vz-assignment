@@ -1,6 +1,6 @@
-import { Pressable, StyleSheet } from 'react-native';
+import { Pressable } from 'react-native';
 
-import { ThemedText } from '@/app/components/ThemedText';
+import { Text } from '@/app/components/primitives/Text';
 import { Spacing } from '@/app/constants/theme';
 import { useTheme } from '@/app/hooks/useTheme';
 
@@ -19,24 +19,17 @@ export function Button({ text, onPress, disabled }: ButtonProps) {
       disabled={disabled}
       onPress={onPress}
       style={({ pressed }) => [
-        styles.button,
+        {
+          alignItems: 'center',
+          borderRadius: Spacing.xl,
+          paddingHorizontal: Spacing.lg,
+          paddingVertical: Spacing.sm,
+        },
         { backgroundColor: theme.tint, opacity: disabled ? 0.5 : pressed ? 0.7 : 1 },
       ]}>
-      <ThemedText type="smallBold" style={styles.text}>
+      <Text size="s" bold style={{ color: '#ffffff' }}>
         {text}
-      </ThemedText>
+      </Text>
     </Pressable>
   );
 }
-
-const styles = StyleSheet.create({
-  button: {
-    alignItems: 'center',
-    borderRadius: Spacing.five,
-    paddingHorizontal: Spacing.four,
-    paddingVertical: Spacing.two,
-  },
-  text: {
-    color: '#ffffff',
-  },
-});

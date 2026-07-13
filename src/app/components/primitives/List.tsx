@@ -1,7 +1,7 @@
 import { Children, cloneElement, ReactElement, ReactNode } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
-import { ThemedText } from '@/app/components/ThemedText';
+import { Text } from '@/app/components/primitives/Text';
 import { Spacing } from '@/app/constants/theme';
 import { useTheme } from '@/app/hooks/useTheme';
 
@@ -32,26 +32,35 @@ function ListItem({
       accessibilityRole="button"
       onPress={onPress}
       style={({ pressed }) => [
-        styles.row,
+        {
+          alignItems: 'center',
+          borderWidth: StyleSheet.hairlineWidth,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          paddingHorizontal: Spacing.md,
+          paddingVertical: Spacing.sm,
+        },
         {
           backgroundColor: theme.backgroundElement,
           borderColor: theme.border,
           marginBottom: isLast ? 0 : -1,
-          borderTopLeftRadius: isFirst ? Spacing.two : 0,
-          borderTopRightRadius: isFirst ? Spacing.two : 0,
-          borderBottomLeftRadius: isLast ? Spacing.two : 0,
-          borderBottomRightRadius: isLast ? Spacing.two : 0,
+          borderTopLeftRadius: isFirst ? Spacing.sm : 0,
+          borderTopRightRadius: isFirst ? Spacing.sm : 0,
+          borderBottomLeftRadius: isLast ? Spacing.sm : 0,
+          borderBottomRightRadius: isLast ? Spacing.sm : 0,
           opacity: pressed ? 0.6 : 1,
         },
       ]}>
-      <View style={styles.left}>
+      <View style={{ alignItems: 'center', flexDirection: 'row', gap: Spacing.sm }}>
         {icon}
-        <ThemedText type="smallBold">{title}</ThemedText>
+        <Text size="s" bold>
+          {title}
+        </Text>
       </View>
       {rightText && (
-        <ThemedText type="small" themeColor="textSecondary">
+        <Text size="s" color="textSecondary">
           {rightText}
-        </ThemedText>
+        </Text>
       )}
     </Pressable>
   );
@@ -67,7 +76,7 @@ export function List({ children }: ListProps) {
   const childrenArray = Children.toArray(children) as ListItemElement[];
 
   return (
-    <View style={styles.container}>
+    <View style={{ borderRadius: Spacing.sm, overflow: 'hidden', width: '100%' }}>
       {childrenArray.map((child, index) =>
         cloneElement(child, {
           key: child.key ?? index,
@@ -80,24 +89,3 @@ export function List({ children }: ListProps) {
 }
 
 List.Item = ListItem;
-
-const styles = StyleSheet.create({
-  container: {
-    borderRadius: Spacing.two,
-    overflow: 'hidden',
-    width: '100%',
-  },
-  row: {
-    alignItems: 'center',
-    borderWidth: StyleSheet.hairlineWidth,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.two,
-  },
-  left: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: Spacing.two,
-  },
-});

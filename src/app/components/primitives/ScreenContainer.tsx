@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react';
-import { RefreshControl, ScrollView, StyleSheet } from 'react-native';
+import { RefreshControl, ScrollView } from 'react-native';
 
 import { useTheme } from '@/app/hooks/useTheme';
 
@@ -17,8 +17,8 @@ export function ScreenContainer({
 
   return (
     <ScrollView
-      style={[styles.scrollView, { backgroundColor: theme.background }]}
-      contentContainerStyle={styles.contentContainer}
+      style={[{ flex: 1 }, { backgroundColor: theme.background }]}
+      contentContainerStyle={{ flexGrow: 1 }}
       refreshControl={
         onRefresh ? (
           <RefreshControl
@@ -33,12 +33,3 @@ export function ScreenContainer({
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  scrollView: {
-    flex: 1,
-  },
-  contentContainer: {
-    flexGrow: 1,
-  },
-});
