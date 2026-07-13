@@ -4,13 +4,22 @@ import { List } from '@/app/components/primitives/List';
 import { useFavorites } from '../context/FavoritesProvider';
 
 export default function FavoritesScreen() {
-  const { favorites } = useFavorites();
+  const { favorites, removeFavorite } = useFavorites();
 
   return (
     <ScreenContainer style={{ paddingHorizontal: Spacing.md }}>
       <List>
         {favorites.map((quote) => (
-          <List.Item key={quote.id} title={quote.body} rightText={`- ${quote.author}`} />
+          <List.Item
+            key={quote.id}
+            title={quote.body}
+            rightText={`- ${quote.author}`}
+            trailingAction={{
+              icon: 'star',
+              accessibilityLabel: 'Remove from favorites',
+              onPress: () => removeFavorite(quote.id),
+            }}
+          />
         ))}
       </List>
     </ScreenContainer>
