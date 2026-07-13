@@ -18,7 +18,15 @@ export function useSearchQuotes({ filter }: { filter: string }) {
           filter: trimmedFilter,
         },
       });
-      return response.data;
+      return response.data.quotes.map((quote) => {
+        if (quote.body.includes('<br')) {
+          console.log('Quote contains <br> tags:', quote.body);
+        }
+        return {
+          ...quote,
+          body: quote.body.replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]+>/g, ''),
+        };
+      });
     },
     enabled: trimmedFilter.length > 0,
   });

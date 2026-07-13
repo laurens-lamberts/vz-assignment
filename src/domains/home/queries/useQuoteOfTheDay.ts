@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { STORAGE_KEYS } from '@/app/config/storageKeys';
 import { api } from '@/app/data/api';
+import { sanitizeQuote } from '@/app/utils/sanitizeQuote';
 
 export type Quote = {
   id: number;
@@ -20,7 +21,16 @@ export function useQuoteOfTheDay() {
     queryKey: [STORAGE_KEYS.QUOTE_OF_THE_DAY],
     queryFn: async () => {
       const response = await api.get<QuoteOfTheDayResponse>('/qotd');
-      return response.data;
+      if (response.data.quote.body.includes('<br')) {
+        console.log('Quote contains <br> tags:', response.data.quote.body);
+      }
+      return {
+        ...response.data,
+        quote: {
+          ...response.data.quote,
+          body: sanitizeQuote(response.data.quote.body),
+        },
+      };
     },
   });
 }

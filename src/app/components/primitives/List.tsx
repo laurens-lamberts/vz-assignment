@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import { MenuView } from '@expo/ui/community/menu';
 import { Children, cloneElement, ReactElement, ReactNode } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -17,12 +18,19 @@ type ListItemMenuAction = {
   destructive?: boolean;
 };
 
+type ListItemTopRightAction = {
+  icon: keyof typeof Ionicons.glyphMap;
+  accessibilityLabel: string;
+  onPress: () => void;
+};
+
 type ListItemProps = {
   title: string;
   rightText?: string;
   icon?: ReactNode;
   onPress?: () => void;
   menuActions?: ListItemMenuAction[];
+  topRightAction?: ListItemTopRightAction;
 };
 
 function ListItem({
@@ -31,6 +39,7 @@ function ListItem({
   onPress,
   rightText,
   menuActions,
+  topRightAction,
   isLast,
 }: ListItemProps & InternalListItemProps) {
   const theme = useTheme();
@@ -43,6 +52,7 @@ function ListItem({
       borderRadius: Spacing.sm,
       flexDirection: 'row' as const,
       gap: Spacing.sm,
+      justifyContent: 'space-between' as const,
       paddingHorizontal: Spacing.md,
       paddingVertical: Spacing.sm,
     },
@@ -68,14 +78,29 @@ function ListItem({
     </View>
   );
 
+  const topRightButton = topRightAction && (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={topRightAction.accessibilityLabel}
+      onPress={topRightAction.onPress}
+      hitSlop={Spacing.sm}
+      style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}>
+      <Ionicons name={topRightAction.icon} size={18} color={theme.text} />
+    </Pressable>
+  );
+
   const row = hasMenu ? (
-    <View style={rowStyle}>{content}</View>
+    <View style={rowStyle}>
+      {content}
+      {topRightButton}
+    </View>
   ) : (
     <Pressable
       accessibilityRole="button"
       onPress={onPress}
       style={({ pressed }) => [...rowStyle, { opacity: pressed && !!onPress ? 0.6 : 1 }]}>
       {content}
+      {topRightButton}
     </Pressable>
   );
 

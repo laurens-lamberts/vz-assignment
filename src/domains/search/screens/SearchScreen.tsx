@@ -13,8 +13,7 @@ import { useFavorites } from '@/domains/favorites/context/FavoritesProvider';
 export default function SearchScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<SearchStackParamList, 'Search'>>();
   const [query, setQuery] = useState('');
-  const { data, isPending } = useSearchQuotes({ filter: query });
-  const searchResults = data?.quotes;
+  const { data: searchResults, isPending } = useSearchQuotes({ filter: query });
   const { addFavorite } = useFavorites();
 
   const noQuotesFound =
@@ -40,18 +39,14 @@ export default function SearchScreen() {
                 key={quote.id}
                 title={quote.body}
                 rightText={`- ${quote.author}`}
-                menuActions={[
-                  {
-                    label: 'Favorite',
-                    onPress: () => addFavorite(quote),
-                  },
-                ]}
+                topRightAction={{
+                  icon: 'star-outline',
+                  accessibilityLabel: 'Favorite',
+                  onPress: () => addFavorite(quote),
+                }}
               />
             ))}
           </List>
-          <Text size="s" color="textSecondary" center style={{ marginTop: Spacing.sm }}>
-            Long-press a quote to favorite
-          </Text>
         </>
       ) : !!query && isPending ? (
         <Text color="textSecondary" center>
