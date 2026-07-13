@@ -1,5 +1,7 @@
 # Swipe / tap to unfavorite in the Favorites list
 
+> **Superseded (2026-07-14):** after implementing the swipe-to-reveal approach below, further discussion replaced it with a native cross-platform context menu (`@expo/ui`'s `MenuView`, triggered by a trailing three-dot icon) instead of swipe. Swipe added discoverability risk on Android (no OS-level hint convention) and, once the always-visible trailing affordance existed, was redundant. See the implementation plan doc for the final approach; this doc is kept for the rejected-alternatives record.
+
 ## Problem
 
 `FavoritesScreen` lists favorited quotes via the `List` primitive but offers no way to remove a favorite from the list itself (only from the Home screen's toggle button). A gesture-based removal was requested, but a hidden swipe-only affordance is not discoverable on Android (no OS-level swipe hint convention there). The design needs to work identically well on iOS and Android without forking the list implementation.

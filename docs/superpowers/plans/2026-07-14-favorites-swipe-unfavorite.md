@@ -1,5 +1,7 @@
 # Favorites Swipe/Tap Unfavorite Implementation Plan
 
+> **Superseded (2026-07-14):** Tasks 1–2 below were executed, then the swipe gesture was removed and replaced with a native cross-platform context menu (`@expo/ui`'s `MenuView`, `@expo/ui/community/menu`) triggered by a trailing three-dot icon in the row's top-right corner. `List.Item`'s `trailingAction` prop became `menuAction: { label, onPress, destructive? }`; `react-native-gesture-handler`'s `Swipeable` was removed entirely from `List.tsx`. Rationale: swipe-to-reveal had no Android discoverability convention and was redundant once a menu-based affordance existed. This doc is kept as the record of the first iteration.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Let a user remove a quote from Favorites either by tapping an always-visible trailing star icon or by swiping the row left to reveal a trash action, on both iOS and Android.
