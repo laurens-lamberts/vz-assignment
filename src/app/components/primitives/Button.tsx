@@ -28,6 +28,7 @@ export function Button({ text, onPress, disabled, minWidth, icon }: ButtonProps)
           justifyContent: 'center',
           gap: Spacing.xs,
           minWidth,
+          minHeight: 44,
           borderRadius: Spacing.xl,
           paddingHorizontal: Spacing.lg,
           paddingVertical: Spacing.sm,

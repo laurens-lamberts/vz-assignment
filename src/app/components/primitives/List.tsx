@@ -6,7 +6,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { Text } from '@/app/components/primitives/Text';
 import { Spacing } from '@/app/constants/theme';
 import { useTheme } from '@/app/hooks/useTheme';
-import Animated, { LinearTransition } from 'react-native-reanimated';
+import Animated, { LinearTransition, useReducedMotion } from 'react-native-reanimated';
 
 type InternalListItemProps = {
   isLast?: boolean;
@@ -43,7 +43,9 @@ function ListItem({
   isLast,
 }: ListItemProps & InternalListItemProps) {
   const theme = useTheme();
+  const reducedMotion = useReducedMotion();
   const hasMenu = !!menuActions && menuActions.length > 0;
+  const itemLabel = [title, rightText].filter(Boolean).join(', ');
 
   const rowStyle = [
     {
@@ -83,29 +85,39 @@ function ListItem({
       accessibilityRole="button"
       accessibilityLabel={topRightAction.accessibilityLabel}
       onPress={topRightAction.onPress}
-      hitSlop={Spacing.sm}
+      hitSlop={Spacing.lg}
       style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}>
       <Ionicons name={topRightAction.icon} size={18} color={theme.text} />
     </Pressable>
   );
 
-  const row = hasMenu ? (
-    <View style={rowStyle}>
-      {content}
-      {topRightButton}
-    </View>
-  ) : (
+  // Rendered as a sibling of topRightButton rather than wrapping it, so the two
+  // never end up as nested touchables (which screen readers handle poorly).
+  const mainContent = onPress ? (
     <Pressable
       accessibilityRole="button"
+      accessibilityLabel={itemLabel}
       onPress={onPress}
-      style={({ pressed }) => [...rowStyle, { opacity: pressed && !!onPress ? 0.6 : 1 }]}>
+      style={({ pressed }) => ({ flexShrink: 1, opacity: pressed ? 0.6 : 1 })}>
       {content}
-      {topRightButton}
     </Pressable>
+  ) : (
+    <View accessible accessibilityLabel={itemLabel} style={{ flexShrink: 1 }}>
+      {content}
+    </View>
+  );
+
+  const row = (
+    <View style={rowStyle}>
+      {mainContent}
+      {topRightButton}
+    </View>
   );
 
   return (
-    <Animated.View style={{ marginBottom: isLast ? 0 : Spacing.sm }} layout={LinearTransition}>
+    <Animated.View
+      style={{ marginBottom: isLast ? 0 : Spacing.sm }}
+      layout={reducedMotion ? undefined : LinearTransition}>
       {hasMenu ? (
         <MenuView
           actions={menuActions.map((action, index) => ({
@@ -117,7 +129,21 @@ function ListItem({
           onPressAction={(event) => {
             menuActions[Number(event.nativeEvent.event)]?.onPress();
           }}>
-          {row}
+          {/* MenuView's Android trigger opts itself out of accessibility and expects
+              its child to declare a role; exposing the menu actions here too means
+              TalkBack users can reach them without a working long-press gesture. */}
+          <View
+            accessible
+            accessibilityLabel={itemLabel}
+            accessibilityActions={menuActions.map((action, index) => ({
+              name: String(index),
+              label: action.label,
+            }))}
+            onAccessibilityAction={(event) => {
+              menuActions[Number(event.nativeEvent.actionName)]?.onPress();
+            }}>
+            {row}
+          </View>
         </MenuView>
       ) : (
         row

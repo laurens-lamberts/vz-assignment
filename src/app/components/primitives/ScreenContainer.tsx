@@ -1,5 +1,5 @@
-import { PropsWithChildren } from 'react';
-import { RefreshControl, ScrollView, StyleProp, ViewStyle } from 'react-native';
+import { PropsWithChildren, useEffect, useRef } from 'react';
+import { AccessibilityInfo, RefreshControl, ScrollView, StyleProp, ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Spacing } from '@/app/constants/theme';
@@ -26,6 +26,14 @@ export function ScreenContainer({
 
   const tabBarHeight = useBottomTabBarHeight();
   const bottomInset = tabBarHeight + Spacing.md;
+
+  const wasRefreshing = useRef(isRefreshing);
+  useEffect(() => {
+    if (wasRefreshing.current && !isRefreshing) {
+      AccessibilityInfo.announceForAccessibility('Refreshed');
+    }
+    wasRefreshing.current = isRefreshing;
+  }, [isRefreshing]);
 
   return (
     <ScrollView
