@@ -33,4 +33,4 @@ Nowadays I would use react-native-mmkv instead of asyncstorage as it is likely t
 
 Usually I would apply internationalization, but I figured that would be out of scope for this assessment. A production-ready app would also need a custom icon, splash screen, CI configuration and such, but I left those out for now. Same as user-configurable settings for appearance mode and such. Also, I would usually align with the client in what order they prefer native feel over cross-platform consistency.
 
-I made sure the typescript compiler and eslint are both happy before making the final commit and sending the repository in. I skipped a couple optional requirements for now, but I'm happy to discuss the approach I would take to implement those.
+I made sure the typescript compiler, eslint and jest are all happy before making the final commit and sending the repository in. I skipped a couple optional requirements for now, but I'm happy to discuss the approach I would take to implement those.
