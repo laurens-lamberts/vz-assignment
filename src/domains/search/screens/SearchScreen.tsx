@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useLayoutEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 
 import { ScreenContainer } from '@/app/components/primitives/ScreenContainer';
 import { Spacing } from '@/app/constants/theme';
@@ -13,8 +13,14 @@ import { useFavorites } from '@/domains/favorites/context/FavoritesProvider';
 export default function SearchScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<SearchStackParamList, 'SearchHome'>>();
   const [query, setQuery] = useState('');
-  const { data: searchResults, isPending } = useSearchQuotes({ filter: query });
+  const [debouncedQuery, setDebouncedQuery] = useState('');
+  const { data: searchResults, isPending } = useSearchQuotes({ filter: debouncedQuery });
   const { addFavorite, removeFavorite, favorites } = useFavorites();
+
+  useEffect(() => {
+    const timeout = setTimeout(() => setDebouncedQuery(query), 300);
+    return () => clearTimeout(timeout);
+  }, [query]);
 
   const noQuotesFound =
     !!query && !isPending && searchResults?.length === 1 && searchResults[0].id === 0;
