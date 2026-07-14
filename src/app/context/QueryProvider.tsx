@@ -3,8 +3,15 @@ import { AppState, AppStateStatus } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
-import { QueryCache, QueryClient, focusManager, onlineManager } from '@tanstack/react-query';
+import {
+  QueryCache,
+  QueryClient,
+  defaultShouldDehydrateQuery,
+  focusManager,
+  onlineManager,
+} from '@tanstack/react-query';
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
+import { CACHE_KEYS } from '@/app/config/cacheKeys';
 
 onlineManager.setEventListener((setOnline) => {
   return NetInfo.addEventListener((state) => {
@@ -38,7 +45,15 @@ export function QueryProvider({ children }: PropsWithChildren<{}>) {
   return (
     <PersistQueryClientProvider
       client={queryClient}
-      persistOptions={{ persister: asyncStoragePersister }}>
+      persistOptions={{
+        persister: asyncStoragePersister,
+        dehydrateOptions: {
+          // Quote of the day must always be fetched fresh on mount (see useQuoteOfTheDay),
+          // so restoring it from disk would only reintroduce a stale-quote flash on startup.
+          shouldDehydrateQuery: (query) =>
+            defaultShouldDehydrateQuery(query) && query.queryKey[0] !== CACHE_KEYS.QUOTE_OF_THE_DAY,
+        },
+      }}>
       {children}
     </PersistQueryClientProvider>
   );

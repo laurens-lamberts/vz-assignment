@@ -11,7 +11,7 @@ import { useSearchQuotes } from '../queries/useSearchQuotes';
 import { useFavorites } from '@/domains/favorites/context/FavoritesProvider';
 
 export default function SearchScreen() {
-  const navigation = useNavigation<NativeStackNavigationProp<SearchStackParamList, 'SearchHome'>>();
+  const navigation = useNavigation<NativeStackNavigationProp<SearchStackParamList, 'SearchRoot'>>();
   const [query, setQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const { data: searchResults, isPending } = useSearchQuotes({ filter: debouncedQuery });

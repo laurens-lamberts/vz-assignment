@@ -1,4 +1,4 @@
 export const CACHE_KEYS = {
   QUOTE_OF_THE_DAY: 'QUOTE_OF_THE_DAY',
   SEARCH_RESULTS: 'SEARCH_RESULTS',
-};
+} as const;

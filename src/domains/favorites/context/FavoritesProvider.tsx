@@ -30,17 +30,13 @@ export function FavoritesProvider({ children }: PropsWithChildren<{}>) {
   useEffect(() => {
     AsyncStorage.getItem(STORAGE_KEYS.FAVORITES)
       .then((stored) => {
-        if (stored) {
-          setFavorites(JSON.parse(stored));
-        }
+        if (stored) setFavorites(JSON.parse(stored));
       })
       .finally(() => setIsHydrated(true));
   }, []);
 
   useEffect(() => {
-    if (!isHydrated) {
-      return;
-    }
+    if (!isHydrated) return;
     AsyncStorage.setItem(STORAGE_KEYS.FAVORITES, JSON.stringify(favorites));
   }, [favorites, isHydrated]);
 

@@ -5,7 +5,7 @@ export type TabParamList = {
 };
 
 export type SearchStackParamList = {
-  SearchHome: undefined;
+  SearchRoot: undefined;
 };
 
 export type RootStackParamList = {
