@@ -19,7 +19,9 @@ type QuoteOfTheDayResponse = {
 export function useQuoteOfTheDay() {
   return useQuery({
     queryKey: [CACHE_KEYS.QUOTE_OF_THE_DAY],
-    gcTime: 0,
+    // Very short garbage collection time to ensure the quote is refreshed daily,
+    // but still leave a bit of time for app startup to keep the same quote during rendering of the text.
+    gcTime: 2000,
     refetchOnMount: 'always',
     queryFn: async () => {
       const response = await api.get<QuoteOfTheDayResponse>('/qotd');
