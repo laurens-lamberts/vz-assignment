@@ -8,11 +8,14 @@ setUpTests();
 describe('AnimatedQuote', () => {
   beforeEach(() => {
     jest.useFakeTimers();
+    // Pin randomness so each char's delay is exactly INTERVAL, making timer advances deterministic.
+    jest.spyOn(Math, 'random').mockReturnValue(0.5);
   });
 
   afterEach(() => {
     act(() => jest.runOnlyPendingTimers());
     jest.useRealTimers();
+    jest.spyOn(Math, 'random').mockRestore();
   });
 
   it('reveals characters progressively over time', () => {

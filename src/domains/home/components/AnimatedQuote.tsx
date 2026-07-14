@@ -5,6 +5,7 @@ import { Platform, View } from 'react-native';
 import { Spacing } from '@/app/constants/theme';
 
 export const INTERVAL = 50; // milliseconds between each character being rendered
+export const DEVIATION = 30; // max milliseconds of randomness applied to INTERVAL
 
 function AnimatedQuote({ quote, author }: { quote: string; author: string }) {
   const reducedMotion = useReducedMotion();
@@ -24,9 +25,11 @@ function AnimatedQuote({ quote, author }: { quote: string; author: string }) {
   useEffect(() => {
     if (!animationEnabled) return;
     if (numberOfCharactersRendered < quote.length) {
+      // Randomize the interval a bit for a more natural effect
+      const time = INTERVAL + (Math.random() * 2 - 1) * DEVIATION;
       const timeout = setTimeout(() => {
         setNumberOfCharactersRendered((prev) => prev + 1);
-      }, INTERVAL);
+      }, time);
       return () => clearTimeout(timeout);
     }
   }, [animationEnabled, numberOfCharactersRendered, previousQuote, quote, reducedMotion]);

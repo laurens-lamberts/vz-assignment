@@ -12,24 +12,24 @@ import { useFavorites } from '@/domains/favorites/context/FavoritesProvider';
 
 export default function SearchScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<SearchStackParamList, 'SearchRoot'>>();
-  const [query, setQuery] = useState('');
+  const [searchString, setSearchString] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
-  const { data: searchResults, isPending } = useSearchQuotes({ filter: debouncedQuery });
+  const { data: searchResults, isPending, isError } = useSearchQuotes({ filter: debouncedQuery });
   const { addFavorite, removeFavorite, favorites } = useFavorites();
 
   useEffect(() => {
-    const timeout = setTimeout(() => setDebouncedQuery(query), 300);
+    const timeout = setTimeout(() => setDebouncedQuery(searchString), 300);
     return () => clearTimeout(timeout);
-  }, [query]);
+  }, [searchString]);
 
   const noQuotesFound =
-    !!query && !isPending && searchResults?.length === 1 && searchResults[0].id === 0;
+    !!searchString && !isPending && searchResults?.length === 1 && searchResults[0].id === 0;
 
   useLayoutEffect(() => {
     navigation.setOptions({
       headerSearchBarOptions: {
         placeholder: 'Search quotes',
-        onChangeText: (event) => setQuery(event.nativeEvent.text),
+        onChangeText: (event) => setSearchString(event.nativeEvent.text),
         placement: 'integrated',
       },
     });
@@ -64,13 +64,17 @@ export default function SearchScreen() {
             })}
           </List>
         </>
-      ) : !!query && isPending ? (
+      ) : !!searchString && isPending ? (
         <Text color="textSecondary" center>
           Searching for quotes...
         </Text>
+      ) : !!searchString && isError ? (
+        <Text color="textSecondary" center>
+          {"Couldn't load search results."}
+        </Text>
       ) : (
         <Text color="textSecondary" center>
-          {query.trim().length > 0 ? 'No search results.' : 'Search for quotes above.'}
+          {searchString.trim().length > 0 ? 'No search results.' : 'Search for quotes above.'}
         </Text>
       )}
     </ScreenContainer>
