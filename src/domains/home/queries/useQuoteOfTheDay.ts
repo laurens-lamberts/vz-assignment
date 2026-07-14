@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { STORAGE_KEYS } from '@/app/config/storageKeys';
 import { api } from '@/app/data/api';
 import { sanitizeQuote } from '@/app/utils/sanitizeQuote';
+import { CACHE_KEYS } from '@/app/config/cacheKeys';
 
 export type Quote = {
   id: number;
@@ -18,7 +18,9 @@ type QuoteOfTheDayResponse = {
 
 export function useQuoteOfTheDay() {
   return useQuery({
-    queryKey: [STORAGE_KEYS.QUOTE_OF_THE_DAY],
+    queryKey: [CACHE_KEYS.QUOTE_OF_THE_DAY],
+    gcTime: 0,
+    refetchOnMount: 'always',
     queryFn: async () => {
       const response = await api.get<QuoteOfTheDayResponse>('/qotd');
       return {
