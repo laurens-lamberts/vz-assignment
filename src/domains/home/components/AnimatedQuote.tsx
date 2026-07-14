@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import Animated, { FadeIn, FadeOut, useReducedMotion } from 'react-native-reanimated';
 import { Text } from '@/app/components/primitives/Text';
-import { Platform, Text as RNText, View } from 'react-native';
+import { Platform, View } from 'react-native';
 import { Spacing } from '@/app/constants/theme';
 
-const INTERVAL = 50; // milliseconds between each character being rendered
+export const INTERVAL = 50; // milliseconds between each character being rendered
 
 function AnimatedQuote({ quote, author }: { quote: string; author: string }) {
   const reducedMotion = useReducedMotion();
@@ -35,16 +35,19 @@ function AnimatedQuote({ quote, author }: { quote: string; author: string }) {
     <View style={{ gap: Spacing.md, alignSelf: 'flex-start' }}>
       <Text size="xxl" bold>
         {quote.split('').map((char, index) => (
-          <RNText key={index} style={{ opacity: index < numberOfCharactersRendered ? 1 : 0 }}>
+          <Animated.Text
+            key={index}
+            testID={`char-${index}`}
+            style={{ opacity: index < numberOfCharactersRendered ? 1 : 0 }}>
             {char}
-          </RNText>
+          </Animated.Text>
         ))}
       </Text>
       {numberOfCharactersRendered === quote.length && (
         <Animated.View
           entering={reducedMotion ? undefined : FadeIn}
           exiting={reducedMotion ? undefined : FadeOut}>
-          <Text color="textSecondary" center>
+          <Text color="textSecondary" center testID="author">
             — {author}
           </Text>
         </Animated.View>
