@@ -8,6 +8,7 @@ import { Spacing } from '@/app/constants/theme';
 import { useTheme } from '@/app/hooks/useTheme';
 import { useFavorites } from '@/domains/favorites/context/FavoritesProvider';
 import { useQuoteOfTheDay } from '@/domains/home/queries/useQuoteOfTheDay';
+import AnimatedQuote from '../components/AnimatedQuote';
 
 export default function HomeScreen() {
   const theme = useTheme();
@@ -26,7 +27,6 @@ export default function HomeScreen() {
         <View
           style={{
             alignItems: 'center',
-            justifyContent: 'center',
             flex: 1,
             paddingBottom: bottomInset,
             paddingHorizontal: Spacing.md,
@@ -41,16 +41,7 @@ export default function HomeScreen() {
               <Button text="Try again" icon="refresh" onPress={() => refetch()} />
             </>
           )}
-          {hasData && (
-            <View style={{ gap: Spacing.md }}>
-              <Text size="xxl" bold center>
-                “{data.quote.body}”
-              </Text>
-              <Text color="textSecondary" center>
-                — {data.quote.author}
-              </Text>
-            </View>
-          )}
+          {hasData && <AnimatedQuote quote={data.quote.body} author={data.quote.author} />}
         </View>
       </ScreenContainer>
       {!isPending && !isError && data && (

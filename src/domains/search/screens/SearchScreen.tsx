@@ -14,7 +14,7 @@ export default function SearchScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<SearchStackParamList, 'SearchHome'>>();
   const [query, setQuery] = useState('');
   const { data: searchResults, isPending } = useSearchQuotes({ filter: query });
-  const { addFavorite } = useFavorites();
+  const { addFavorite, removeFavorite, favorites } = useFavorites();
 
   const noQuotesFound =
     !!query && !isPending && searchResults?.length === 1 && searchResults[0].id === 0;
@@ -34,18 +34,28 @@ export default function SearchScreen() {
       {searchResults && searchResults.length > 0 && !noQuotesFound ? (
         <>
           <List>
-            {searchResults.map((quote) => (
-              <List.Item
-                key={quote.id}
-                title={quote.body}
-                rightText={`- ${quote.author}`}
-                topRightAction={{
-                  icon: 'star-outline',
-                  accessibilityLabel: 'Favorite',
-                  onPress: () => addFavorite(quote),
-                }}
-              />
-            ))}
+            {searchResults.map((quote) => {
+              const isFavorite = favorites.some((f) => f.id === quote.id);
+
+              return (
+                <List.Item
+                  key={quote.id}
+                  title={quote.body}
+                  rightText={`- ${quote.author}`}
+                  topRightAction={{
+                    icon: isFavorite ? 'star' : 'star-outline',
+                    accessibilityLabel: isFavorite ? 'Remove from favorites' : 'Add to favorites',
+                    onPress: () => {
+                      if (isFavorite) {
+                        removeFavorite(quote.id);
+                      } else {
+                        addFavorite(quote);
+                      }
+                    },
+                  }}
+                />
+              );
+            })}
           </List>
         </>
       ) : !!query && isPending ? (
