@@ -36,7 +36,7 @@ function AnimatedQuote({ quote, author }: { quote: string; author: string }) {
 
   return (
     <View style={{ gap: Spacing.md, alignSelf: 'flex-start' }}>
-      <Text size="xxl" bold>
+      <Text size="xxl" bold allowFontScaling={false}>
         {quote.split('').map((char, index) => (
           <Animated.Text
             key={index}
