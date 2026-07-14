@@ -1,4 +1,4 @@
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, Platform, View } from 'react-native';
 import { useBottomTabBarHeight } from 'react-native-bottom-tabs';
 
 import { Button } from '@/app/components/primitives/Button';
@@ -48,7 +48,7 @@ export default function HomeScreen() {
         <View
           style={{
             position: 'absolute',
-            bottom: bottomInset,
+            bottom: Platform.OS === 'ios' ? bottomInset : Spacing.lg,
             alignSelf: 'center',
           }}>
           <View style={{ flexDirection: 'row', gap: Spacing.md }}>

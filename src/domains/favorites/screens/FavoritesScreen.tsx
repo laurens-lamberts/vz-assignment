@@ -27,7 +27,7 @@ export default function FavoritesScreen() {
               />
             ))}
           </List>
-          <Text size="s" color="textSecondary" center style={{ marginTop: Spacing.sm }}>
+          <Text size="s" color="textSecondary" center style={{ marginTop: Spacing.md }}>
             Long-press a quote to unfavorite
           </Text>
         </>
