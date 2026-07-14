@@ -1,6 +1,6 @@
 # FavQs App
 
-Expo app built for Vodafone Ziggo's assignment, using React Navigation with a custom dev client.
+Expo app built for an assignment, using React Navigation with a custom dev client.
 
 ## Get started
 
