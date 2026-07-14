@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Animated, { FadeIn, FadeOut, useReducedMotion } from 'react-native-reanimated';
 import { Text } from '@/app/components/primitives/Text';
-import { Text as RNText, View } from 'react-native';
+import { Platform, Text as RNText, View } from 'react-native';
 import { Spacing } from '@/app/constants/theme';
 
 const INTERVAL = 50; // milliseconds between each character being rendered
@@ -13,20 +13,23 @@ function AnimatedQuote({ quote, author }: { quote: string; author: string }) {
     reducedMotion ? quote.length : 0,
   );
 
+  // TODO; On Android the text does not seem to animate. To be investigated.
+  const animationEnabled = Platform.OS !== 'android' && !reducedMotion;
+
   if (quote !== previousQuote) {
     setPreviousQuote(quote);
-    setNumberOfCharactersRendered(reducedMotion ? quote.length : 0);
+    setNumberOfCharactersRendered(animationEnabled ? 0 : quote.length);
   }
 
   useEffect(() => {
-    if (reducedMotion) return;
+    if (!animationEnabled) return;
     if (numberOfCharactersRendered < quote.length) {
       const timeout = setTimeout(() => {
         setNumberOfCharactersRendered((prev) => prev + 1);
       }, INTERVAL);
       return () => clearTimeout(timeout);
     }
-  }, [numberOfCharactersRendered, previousQuote, quote, reducedMotion]);
+  }, [animationEnabled, numberOfCharactersRendered, previousQuote, quote, reducedMotion]);
 
   return (
     <View style={{ gap: Spacing.md, alignSelf: 'flex-start' }}>
