@@ -1,6 +1,6 @@
-# Welcome to your Expo app 👋
+# FavQs App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Expo app built for Vodafone Ziggo's assignment, using React Navigation with a custom dev client.
 
 ## Get started
 
@@ -16,30 +16,21 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+   Or build and run directly on a device/simulator:
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+   ```bash
+   npm run ios      # iOS
+   npm run android   # Android
+   ```
 
-You can start developing by editing the files inside **src/app** (shared/app-shell code) and **src/domains** (feature code). This project uses [React Navigation](https://reactnavigation.org) for navigation, set up programmatically in `src/app/App.tsx`.
+## How I handled this assessment
 
-### Other setup steps
+According to specification, I built a quotes viewer with option to mark as favorite, and manage the favorites.
 
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+I initialized the project with the expo CLI, then used AI to tweak the basic structure to match my preferred code-style and project layout. From there, I pulled in some component primitives that I regularly use, and started on the objective implementation.
 
-## Learn more
+Nowadays I would use react-native-mmkv instead of asyncstorage as it is likely to perform (slightly) better, but I followed the specification. I used bare react-navigation over expo-router, as this is my personal preference. I prefer declarative code for my navigation structure over folder-based. Furthermore, I used inline-styling throughout screens and components. I prefer when styling and JSX code are at the same spot, so I can interpret the code with styling and make a mental picture of what the code is doing (for me this works better than using stylesheets/styled components/nativewind). This also saves in scrolling up and down often while working on components and screens. Extracting code into components often helps preventing duplicate style definitions. But usually I would conform to the client preference on this.
 
-To learn more about developing your project with Expo, look at the following resources:
+Usually I would apply internationalization, but I figured that would be out of scope for this assessment. A production-ready app would also need a custom icon, splash screen, CI configuration and such, but I left those out for now. Same as user-configurable settings for appearance mode and such. Also, I would usually align with the client in what order they prefer native feel over cross-platform consistency.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+I made sure the typescript compiler and eslint are both happy before making the final commit and sending the repository in.
